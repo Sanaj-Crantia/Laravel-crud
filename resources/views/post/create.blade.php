@@ -12,6 +12,11 @@
 
     <section>
         <div class="container py-5">
+            @auth
+            <div class="d-flex text-align-right">
+                <h4>{{ Auth::user()->name }}</h4>
+            </div>
+            @endauth
             <div class="row">
                 <div class="col-md-5">
                     @if(session()->has('success'))
