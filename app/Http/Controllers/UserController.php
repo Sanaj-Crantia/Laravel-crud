@@ -10,10 +10,13 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function showRegister(){
+    public function showRegister() {
         return view('user.register');   
     }
-    public function register(Request $request){
+
+    // register user
+
+    public function register(Request $request) {
         // dd($request);
         $data = $request->validate([
             'name' =>  'required|string|max:255',
@@ -25,30 +28,74 @@ class UserController extends Controller
 
         $user = User::create($data);
 
-        // Auth::login($user);
+        Auth::login($user);
         return redirect()->route('post.create');
     }
 
-    public function showLogin(){
+
+
+    // Login form
+    public function showLogin() {
         return view('user.login');
     }
 
-    public function login(Request $request){
+
+    // Login user
+    public function login(Request $request) {
         $data = $request->validate([
             'email' => 'required|email',
             "password" => 'required|string', 
         ]);
 
-        if(Auth::attempt($data)){
-            return redirect()->route('post.create');
+        if(Auth::attempt($data)) {
+            $request->session()->regenerate();
+            return redirect()->intended(route('post.create'));
         }
-
         return back()->with('error','Invalid credentials');
 
     }
 
-    public function logout(){
-        //
+    // change password form
+    public  function showChangePassword() {
+        return view('user.changePassword');
+    }
+
+
+    // Change password 
+    public function changePassword(Request $request) {
+        // dd($request);
+
+        $request -> validate([
+            'current_password' => [
+                'required',
+                'string',
+            function($attribute, $value, $fail) {
+                if(!Hash::check($value,Auth::user()->password)) {
+                    return $fail('Current password does not match');
+                }
+            } 
+        ],
+            'new_password' => 'required|string|min:8|confirmed',
+            'new_password_confirmation' => 'required|string'
+        ]);
+
+        Auth::user()->update([
+            // 'password' => Hash::make($request->new_password)
+            'password' => $request->new_password
+        ]);
+
+        return redirect()->route('post.create')->with('success','Password changed successfully');
+
+    }
+
+
+    // Logout user
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('showLogin');
     }
 
 }

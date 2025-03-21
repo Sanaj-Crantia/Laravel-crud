@@ -13,8 +13,10 @@
     <section>
         <div class="container py-5">
             @auth
-            <div class="d-flex text-align-right">
-                <h4>{{ Auth::user()->name }}</h4>
+            <div class="d-flex justify-content-end mb-3">
+                <h4 class="me-3 ">{{ Auth::user()->name }}</h4>
+                <a href="{{ route('changePassword') }}" class="btn btn-primary me-3"> Change password </a>
+                <a href="{{ route('logout') }}" class="btn btn-danger"> Logout </a>
             </div>
             @endauth
             <div class="row">

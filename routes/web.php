@@ -20,5 +20,7 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/register', 'register')->name('register');
     Route::get('/user/login', 'showLogin')->name('showLogin');
     Route::Post('/user/login', 'login')->name('login');
-    Route::get('/user/{id}', 'logout')->name('logout');
+    Route::get('/user/change', 'showChangePassword')->name('showChangePassword');
+    Route::patch('/user/change', 'changePassword')->name('changePassword');
+    Route::get('/user/logout', 'logout')->name('logout');
 });

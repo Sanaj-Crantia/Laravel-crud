@@ -44,6 +44,7 @@
                                     <input type="password" class="form-control" name="password_confirmation" id="">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Register</button>
+                                <a href="{{ route('showLogin') }}" class="btn btn-secondary">Back</a>
                             </form>
                         </div>
                     </div>
